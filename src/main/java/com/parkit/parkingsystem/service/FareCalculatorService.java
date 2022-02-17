@@ -20,6 +20,7 @@ public class FareCalculatorService {
 		// 3 - We convert milliseconds to hours
 		duration = duration / 3600000;
 
+		// 4 - We calculate ticket price depending on parking type
 		switch (ticket.getParkingSpot().getParkingType()) {
 		case CAR: {
 			ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
