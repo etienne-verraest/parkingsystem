@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -26,11 +27,13 @@ public class FareCalculatorServiceTest {
 	private static FareCalculatorService fareCalculatorService;
 	private Ticket ticket;
 
+	// Call our service before executing tests
 	@BeforeAll
 	private static void setUp() {
 		fareCalculatorService = new FareCalculatorService();
 	}
 
+	// Create a new ticket before every test
 	@BeforeEach
 	private void setUpPerTest() {
 		ticket = new Ticket();
@@ -123,6 +126,7 @@ public class FareCalculatorServiceTest {
 		}
 
 		@Test
+		@Disabled
 		@DisplayName("Calculate fare with less than one hour of parking time.")
 		public void calculateFareBike_WithLessThanOneHourParkingTime() {
 			Date inTime = new Date();
@@ -139,6 +143,7 @@ public class FareCalculatorServiceTest {
 		}
 	}
 
+	@Disabled
 	@Test
 	public void calculateFare_UnkownType() {
 		Date inTime = new Date();
