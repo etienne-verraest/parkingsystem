@@ -7,7 +7,6 @@ import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -126,7 +125,6 @@ public class FareCalculatorServiceTest {
 		}
 
 		@Test
-		@Disabled
 		@DisplayName("Calculate fare with less than one hour of parking time.")
 		public void calculateFareBike_WithLessThanOneHourParkingTime() {
 			Date inTime = new Date();
@@ -143,13 +141,26 @@ public class FareCalculatorServiceTest {
 		}
 	}
 
-	@Disabled
 	@Test
 	public void calculateFare_UnkownType() {
 		Date inTime = new Date();
 		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
 		Date outTime = new Date();
-		ParkingSpot parkingSpot = new ParkingSpot(1, null, false);
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.DEFAULT, false);
+
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
+	}
+
+	@Test
+	void calculateFare_WithNullOutTime() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+		Date outTime = null;
+
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
