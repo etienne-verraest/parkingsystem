@@ -3,6 +3,8 @@ package com.parkit.parkingsystem.constants;
 public class DBConstants {
 
 	public static final String MYSQL_URL = "jdbc:mysql://localhost:3306/prod";
+	public static final String MYSQL_URL_TEST = "jdbc:mysql://localhost:3306/test";
+
 	public static final String MYSQL_USER = "root";
 	public static final String MYSQL_PASSWORD = "rootroot";
 

@@ -18,6 +18,7 @@ public class FareCalculatorService {
 		double duration = (outHour - inHour);
 
 		// 3 - We convert milliseconds to hours
+		// TODO : Handle only 3 decimals (.000)
 		duration = duration / 3600000;
 
 		// 4 - We calculate ticket price depending on parking type
