@@ -7,7 +7,7 @@ public class FareCalculatorService {
 
 	public void calculateFare(Ticket ticket) {
 
-		if ((ticket.getOutTime() != null) || (ticket.getInTime().after(ticket.getOutTime()))) {
+		if ((ticket.getOutTime() != null) || (ticket.getOutTime().after(ticket.getInTime()))) {
 
 			// 1 - We convert In and Out time in milliseconds
 			double inHour = ticket.getInTime().getTime();

@@ -42,7 +42,7 @@ public class FareCalculatorServiceTest {
 		@DisplayName("Calculate fare with less than one hour of parking time.")
 		@ParameterizedTest(name = "{0} minutes should cost {1} €")
 		@CsvSource({ "45,1.125", "58,1.45" })
-		public void calculateFareCar_WithLessThanOneHourParkingTime(double minutes, double expectedPrice) {
+		void calculateFareCar_WithLessThanOneHourParkingTime(double minutes, double expectedPrice) {
 			Date inTime = new Date();
 
 			inTime.setTime((long) (System.currentTimeMillis() - (minutes * 60 * 1000)));
@@ -59,9 +59,9 @@ public class FareCalculatorServiceTest {
 
 		@DisplayName("Calculate fare with more than a day of parking time.")
 		@Test
-		public void calculateFareCar_WithMoreThanADayParkingTime() {
+		void calculateFareCar_WithMoreThanADayParkingTime() {
 			Date inTime = new Date();
-			inTime.setTime(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+			inTime.setTime(System.currentTimeMillis() - (48 * 60 * 60 * 1000));
 			Date outTime = new Date();
 			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -69,7 +69,7 @@ public class FareCalculatorServiceTest {
 			ticket.setOutTime(outTime);
 			ticket.setParkingSpot(parkingSpot);
 			fareCalculatorService.calculateFare(ticket);
-			assertEquals((24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+			assertEquals((48 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
 		}
 
 	}
@@ -126,9 +126,9 @@ public class FareCalculatorServiceTest {
 	}
 
 	@Test
-	@DisplayName("Incorrect ticket dates should throw exception")
 	@Disabled
-	public void calculateFare_WithAfterInTime() {
+	@DisplayName("Incorrect ticket dates should throw exception")
+	void calculateFare_WithAfterOutTime() {
 
 		Date inTime = new Date();
 		inTime.setTime(System.currentTimeMillis() + (60 * 60 * 1000));

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
-import org.apache.logging.log4j.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -21,8 +20,6 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingServiceTest {
-
-	private static final Logger logger = LogManager.getLogger("ParkingServiceTest");
 
 	@InjectMocks
 	ParkingService parkingService;
@@ -54,35 +51,33 @@ public class ParkingServiceTest {
 
 		@Test
 		@DisplayName("Vehicle incoming with available parking spot")
-		public void processIncomingVehicle_WithParkingSpotAvailable() throws Exception {
+		void processIncomingVehicle_WithParkingSpotAvailable() throws Exception {
 
 			// Arrange
 			when(inputReaderUtilMock.readSelection()).thenReturn(1);
-			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
-			when(ticketDAOMock.saveTicket(ticket)).thenReturn(true);
+			when(parkingSpotDAOMock.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+			when(ticketDAOMock.saveTicket(any(Ticket.class))).thenReturn(true);
 
 			// Act
 			parkingService.processIncomingVehicle();
 
 			// Assert
-			verify(parkingSpotDAOMock).updateParking(any(ParkingSpot.class));
+			verify(parkingSpotDAOMock, times(1)).updateParking(any(ParkingSpot.class));
 			verify(ticketDAOMock, times(1)).saveTicket(any(Ticket.class));
-			verifyNoMoreInteractions(parkingSpotDAOMock, ticketDAOMock);
 		}
 
 		@Test
 		@DisplayName("Vehicle incoming when parking is full")
-		public void processIncomingVehicle_WhenParkingIsFull() throws Exception {
+		void processIncomingVehicle_WhenParkingIsFull() throws Exception {
 			// Arrange
 			when(inputReaderUtilMock.readSelection()).thenReturn(1);
-			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(0);
+			when(parkingSpotDAOMock.getNextAvailableSlot(any(ParkingType.class))).thenReturn(0);
 
 			// Act
 			parkingService.processIncomingVehicle();
 
 			// Assert
 			verify(parkingSpotDAOMock, never()).updateParking(any(ParkingSpot.class));
-			verify(ticketDAOMock, never()).saveTicket(any(Ticket.class));
 
 		}
 	}
@@ -94,7 +89,7 @@ public class ParkingServiceTest {
 
 		@Test
 		@DisplayName("A parking spot is available")
-		public void getNextParking_WithAvailableSpot() throws Exception {
+		void getNextParking_WithAvailableSpot() throws Exception {
 			// Arrange
 			when(inputReaderUtilMock.readSelection()).thenReturn(1);
 			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(20);
@@ -110,7 +105,7 @@ public class ParkingServiceTest {
 
 		@Test
 		@DisplayName("No parking spot is available")
-		public void getNextParking_ButParkingIsFull() throws Exception {
+		void getNextParking_ButParkingIsFull() throws Exception {
 			// Arrange
 			when(inputReaderUtilMock.readSelection()).thenReturn(1);
 			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(0);
@@ -150,7 +145,7 @@ public class ParkingServiceTest {
 
 		@Test
 		@DisplayName("VehicleType returns IllegalArgumentException")
-		public void getVehicleType_ButIllegalArgumentExceptionIsThrown() {
+		void getVehicleType_ButIllegalArgumentExceptionIsThrown() {
 
 			// Arrange
 			when(inputReaderUtilMock.readSelection()).thenReturn(3);
@@ -188,7 +183,7 @@ public class ParkingServiceTest {
 
 		@Test
 		@DisplayName("Vehicle exiting with bad-formatted ticket")
-		public void processExitingVehicle_WithBadTicket() throws Exception {
+		void processExitingVehicle_WithBadTicket() throws Exception {
 
 			// Arrange
 			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
