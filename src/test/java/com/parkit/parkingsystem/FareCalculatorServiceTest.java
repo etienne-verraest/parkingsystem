@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
 
-import org.apache.logging.log4j.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +16,8 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 @DisplayName("Calculate fare for cars and bikes")
 public class FareCalculatorServiceTest {
 
-	private static final Logger logger = LogManager.getLogger("FareCalculatorServiceTest");
+	// private static final Logger logger =
+	// LogManager.getLogger("FareCalculatorServiceTest");
 
 	private static FareCalculatorService fareCalculatorService;
 	private Ticket ticket;

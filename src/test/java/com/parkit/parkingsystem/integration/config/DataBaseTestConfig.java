@@ -1,10 +1,9 @@
 package com.parkit.parkingsystem.integration.config;
 
-import org.apache.logging.log4j.*;
-
 public class DataBaseTestConfig {
 
-	private static final Logger logger = LogManager.getLogger("DataBaseTestConfig");
+	// private static final Logger logger =
+	// LogManager.getLogger("DataBaseTestConfig");
 
 //	public Connection getConnection() throws ClassNotFoundException, SQLException {
 //		return DriverManager.getConnection(DBConstants.MYSQL_URL_TEST, DBConstants.MYSQL_USER,
