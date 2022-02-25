@@ -20,7 +20,6 @@ public class ParkingSpotDAO {
 		int result = -1;
 
 		try {
-
 			PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
 			ps.setString(1, parkingType.toString());
 
@@ -36,8 +35,8 @@ public class ParkingSpotDAO {
 		} finally {
 			dataBaseConfig.closeConnection(con);
 		}
-		return result;
 
+		return result;
 	}
 
 	// Update availability of a parking slot

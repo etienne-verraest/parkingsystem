@@ -14,13 +14,36 @@ public class TicketDAO {
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+	// Check if it's a recurring user
+	public boolean checkIfVehicleIsRegular(String plateNumber) throws Exception {
+		Connection con = dataBaseConfig.getConnection();
+
+		try {
+			PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_FOR_PLATE);
+			ps.setString(1, plateNumber);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				System.out.println("Plate Number : " + rs.getString(1));
+				return true;
+			}
+
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
+		} catch (Exception ex) {
+			logger.error("There was an error while checking for plate number : " + ex);
+		} finally {
+			dataBaseConfig.closeConnection(con);
+		}
+		return false;
+	}
+
 	// Save ticket to database
 	public boolean saveTicket(Ticket ticket) throws Exception {
 		Connection con = dataBaseConfig.getConnection();
 
 		try {
 			PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
-
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			ps.setInt(1, ticket.getParkingSpot().getId());
 			ps.setString(2, ticket.getVehicleRegNumber());
@@ -39,9 +62,10 @@ public class TicketDAO {
 
 	// Get ticket from database
 	public Ticket getTicket(String vehicleRegNumber) throws Exception {
-		Connection con = dataBaseConfig.getConnection();
 
+		Connection con = dataBaseConfig.getConnection();
 		Ticket ticket = null;
+
 		try {
 			PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)

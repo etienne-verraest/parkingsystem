@@ -66,6 +66,30 @@ public class ParkingServiceTest {
 			verify(ticketDAOMock, times(1)).saveTicket(any(Ticket.class));
 		}
 
+		// FIXME : IllegalArgument
+		@Test
+		@Disabled
+		@DisplayName("Regular user incoming")
+		void processIncomingVehicle_andUserIsRegular() throws Exception {
+
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1);
+			when(parkingSpotDAOMock.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+			when(parkingSpotDAOMock.updateParking(any(ParkingSpot.class))).thenReturn(true);
+
+			when(ticketDAOMock.saveTicket(any(Ticket.class))).thenReturn(true);
+			when(ticketDAOMock.checkIfVehicleIsRegular("XYZIJ")).thenReturn(true);
+
+			// Act
+			parkingService.processIncomingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock, times(1)).getNextAvailableSlot(any(ParkingType.class));
+			verify(parkingSpotDAOMock, times(1)).updateParking(any(ParkingSpot.class));
+			verify(ticketDAOMock, times(1)).saveTicket(any(Ticket.class));
+			assertTrue(ticketDAOMock.checkIfVehicleIsRegular("XYZIJ"));
+		}
+
 		@Test
 		@DisplayName("Vehicle incoming when parking is full")
 		void processIncomingVehicle_WhenParkingIsFull() throws Exception {
@@ -162,6 +186,25 @@ public class ParkingServiceTest {
 	@Tag("Exit")
 	@DisplayName("Exiting Vehicles")
 	class processExitingVehicleTests {
+
+		@Test
+		@Disabled
+		@DisplayName("Check discount if it's a recurring user")
+		void processExitingVehicle_WithDiscount() throws Exception {
+
+			// Arrange
+			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+			ticket.setParkingSpot(parkingSpot);
+			when(inputReaderUtilMock.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+			when(ticketDAOMock.getTicket("ABCDEF")).thenReturn(ticket);
+			when(ticketDAOMock.updateTicket(ticket)).thenReturn(true);
+
+			// Act
+			parkingService.processExitingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock).updateParking(parkingSpot);
+		}
 
 		@Test
 		@DisplayName("Vehicle exiting with well-formatted ticket")

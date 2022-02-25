@@ -5,7 +5,7 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
-	public void calculateFare(Ticket ticket) {
+	public void calculateFare(Ticket ticket, boolean isRegularUser) {
 
 		if ((ticket.getOutTime() != null) || (ticket.getOutTime().after(ticket.getInTime()))) {
 
@@ -22,6 +22,7 @@ public class FareCalculatorService {
 			// 4.1 - We check if duration is over 30 minutes, if it's not parking is free
 			// 4.2 - We calculate ticket price depending on Vehicle Type
 			if (duration > 0.5) {
+
 				switch (ticket.getParkingSpot().getParkingType()) {
 				case CAR: {
 					ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
@@ -34,6 +35,15 @@ public class FareCalculatorService {
 				default:
 					throw new IllegalArgumentException("Unkown Parking Type");
 				}
+
+				// If it is a regular user, let's apply a 5% discount
+				if (isRegularUser) {
+					double priceDiscount = ticket.getPrice();
+					priceDiscount = priceDiscount - (priceDiscount * 0.05);
+					ticket.setPrice(priceDiscount);
+					System.out.println("5% discount has been applied to ticket price");
+				}
+
 			} else {
 				ticket.setPrice(0.0);
 			}
