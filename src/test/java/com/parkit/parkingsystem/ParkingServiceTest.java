@@ -65,7 +65,6 @@ public class ParkingServiceTest {
 			verify(ticketDAOMock, times(1)).saveTicket(any(Ticket.class));
 		}
 
-		// FIXME : IllegalArgument, had to disable test
 		@Test
 		@Disabled
 		@DisplayName("Regular user incoming")

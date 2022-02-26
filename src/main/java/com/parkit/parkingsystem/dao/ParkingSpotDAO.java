@@ -1,15 +1,11 @@
 package com.parkit.parkingsystem.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
-import com.parkit.parkingsystem.constants.DBConstants;
-import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.constants.*;
 import com.parkit.parkingsystem.model.ParkingSpot;
 
 public class ParkingSpotDAO {
@@ -17,7 +13,6 @@ public class ParkingSpotDAO {
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-	// TODO : TU sur DAO
 	// Check if there's an empty parking slot.
 	public int getNextAvailableSlot(ParkingType parkingType) throws Exception {
 

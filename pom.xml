@@ -163,8 +163,8 @@
 		             		</reports>
 		            	</reportSet>
 		          	</reportSets>
-		       </plugin>
-	      
+		     	</plugin>
 		</plugins>   
 	</reporting>
+
 </project>
