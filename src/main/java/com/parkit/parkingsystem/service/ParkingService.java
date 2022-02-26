@@ -2,11 +2,14 @@ package com.parkit.parkingsystem.service;
 
 import java.util.Date;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.*;
-import com.parkit.parkingsystem.model.*;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 public class ParkingService {
@@ -30,6 +33,7 @@ public class ParkingService {
 		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 
+			// TODO : If PLATE NUMBER is already parked, abort process
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehichleRegNumber();
 
@@ -46,7 +50,6 @@ public class ParkingService {
 				Ticket ticket = new Ticket();
 
 				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-				// ticket.setId(ticketID);
 				ticket.setParkingSpot(parkingSpot);
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setPrice(0);
@@ -55,7 +58,7 @@ public class ParkingService {
 				ticketDAO.saveTicket(ticket);
 
 				System.out.println("Please park your vehicle in spot number : " + parkingSpot.getId());
-				System.out.println("Recorded in-time for vehicle number : " + vehicleRegNumber + " is:" + inTime);
+				System.out.println("Recorded in-time for vehicle number : " + vehicleRegNumber + " is : " + inTime);
 			}
 
 		} catch (Exception e) {
@@ -116,24 +119,27 @@ public class ParkingService {
 
 			String vehicleRegNumber = getVehichleRegNumber();
 			boolean isRegular = ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber);
+
 			Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
 			ticket.setOutTime(new Date(System.currentTimeMillis()));
 
 			fareCalculatorService.calculateFare(ticket, isRegular);
 
 			if (ticketDAO.updateTicket(ticket)) {
+
+				// Set used parking spot to availaible
 				ParkingSpot parkingSpot = ticket.getParkingSpot();
 				parkingSpot.setAvailable(true);
 				parkingSpotDAO.updateParking(parkingSpot);
 
 				double ticketPrice = ticket.getPrice();
-
 				if (ticketPrice > 0) {
 					System.out.println("Please pay the parking fare : " + ticketPrice);
 				} else {
 					System.out.println("Parking is free for the first 30 minutes, no payment needed");
 				}
-				System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is :"
+
+				System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is : "
 						+ ticket.getOutTime());
 
 			} else {

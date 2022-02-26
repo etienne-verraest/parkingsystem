@@ -1,16 +1,25 @@
 package com.parkit.parkingsystem;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.parkit.parkingsystem.constants.*;
-import com.parkit.parkingsystem.model.*;
+import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
 @DisplayName("Calculate fare for cars and bikes")
@@ -133,6 +142,7 @@ public class FareCalculatorServiceTest {
 			assertEquals(0, ticket.getPrice());
 		}
 
+		// TODO : Setter inTime & outTime dans une méthode
 		@Test
 		@DisplayName("User has a 5% discount coupon if it's a regular user")
 		void calculateFare_With5PercentDiscount() {
@@ -160,7 +170,7 @@ public class FareCalculatorServiceTest {
 		Date inTime = new Date();
 		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
 		Date outTime = new Date();
-		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.DEFAULT, false);
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.UNKNOWN, false);
 
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);

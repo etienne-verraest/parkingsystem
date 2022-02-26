@@ -1,12 +1,18 @@
 package com.parkit.parkingsystem.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
-import com.parkit.parkingsystem.constants.*;
-import com.parkit.parkingsystem.model.*;
+import com.parkit.parkingsystem.constants.DBConstants;
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 
 public class TicketDAO {
 
@@ -19,19 +25,15 @@ public class TicketDAO {
 		Connection con = dataBaseConfig.getConnection();
 
 		try {
-			PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_FOR_PLATE);
+			PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_FOR_REGULAR_USER);
 			ps.setString(1, plateNumber);
 
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				System.out.println("Plate Number : " + rs.getString(1));
 				return true;
 			}
-
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
-			logger.error("There was an error while checking for plate number : " + ex);
+			logger.error("There was an error while checking if this vehicle is a regular one : " + ex);
 		} finally {
 			dataBaseConfig.closeConnection(con);
 		}
@@ -100,6 +102,7 @@ public class TicketDAO {
 			PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
 			ps.setDouble(1, ticket.getPrice());
 			ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
+			System.out.println(ticket.getId());
 			ps.setInt(3, ticket.getId());
 			ps.execute();
 			return true;

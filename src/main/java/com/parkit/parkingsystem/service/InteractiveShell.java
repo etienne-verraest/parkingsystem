@@ -1,8 +1,10 @@
 package com.parkit.parkingsystem.service;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.parkit.parkingsystem.dao.*;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 public class InteractiveShell {
@@ -10,8 +12,8 @@ public class InteractiveShell {
 	private static final Logger logger = LogManager.getLogger("InteractiveShell");
 
 	public static void loadInterface() {
-		logger.info("Parking system have been initialized");
 
+		logger.info("Parking system have been initialized");
 		System.out.println("Welcome to Parking System!");
 
 		boolean continueApp = true;
