@@ -17,4 +17,6 @@ public class DBConstants {
 
 	public static final String CHECK_FOR_REGULAR_USER = "SELECT VEHICLE_REG_NUMBER FROM ticket WHERE VEHICLE_REG_NUMBER=?";
 
+	// TEST QUERIES
+	public static final String CREATE_TICKET = "insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(1 , ? , 3.0, 1645901937, 1646333937)";
 }

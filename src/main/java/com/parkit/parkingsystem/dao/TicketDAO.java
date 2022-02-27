@@ -1,18 +1,12 @@
 package com.parkit.parkingsystem.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
-import com.parkit.parkingsystem.constants.DBConstants;
-import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.constants.*;
+import com.parkit.parkingsystem.model.*;
 
 public class TicketDAO {
 
@@ -29,9 +23,11 @@ public class TicketDAO {
 			ps.setString(1, plateNumber);
 
 			ResultSet rs = ps.executeQuery();
+
 			if (rs.next()) {
 				return true;
 			}
+
 		} catch (Exception ex) {
 			logger.error("There was an error while checking if this vehicle is a regular one : " + ex);
 		} finally {
