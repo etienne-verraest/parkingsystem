@@ -199,27 +199,6 @@ public class FareCalculatorServiceTest {
 	}
 
 	@Test
-	@Disabled
-	@DisplayName("Incorrect ticket dates should throw exception")
-	void calculateFare_WithAfterOutTime() {
-		// ARRANGE
-		Date inTime = new Date();
-		inTime.setTime(System.currentTimeMillis() + (60 * 60 * 1000));
-
-		Date outTime = new Date();
-		outTime.setTime(System.currentTimeMillis());
-
-		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
-
-		ticket.setInTime(inTime);
-		ticket.setOutTime(outTime);
-		ticket.setParkingSpot(parkingSpot);
-
-		// ACT & ASSERT
-		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket, false));
-	}
-
-	@Test
 	@DisplayName("Calculating fare but out time is null")
 	void calculateFare_WithNullOutTime() {
 		// ARRANGE

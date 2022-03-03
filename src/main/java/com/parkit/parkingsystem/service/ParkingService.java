@@ -30,7 +30,6 @@ public class ParkingService {
 		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 
-			// TODO : If PLATE NUMBER is already parked, abort process
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehichleRegNumber();
 
@@ -118,13 +117,13 @@ public class ParkingService {
 			boolean isRegular = ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber);
 
 			Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-			ticket.setOutTime(new Date(System.currentTimeMillis()));
+			ticket.setOutTime(new Date());
 
 			fareCalculatorService.calculateFare(ticket, isRegular);
 
 			if (ticketDAO.updateTicket(ticket)) {
 
-				// Set used parking spot to availaible
+				// Set used parking spot to available
 				ParkingSpot parkingSpot = ticket.getParkingSpot();
 				parkingSpot.setAvailable(true);
 				parkingSpotDAO.updateParking(parkingSpot);

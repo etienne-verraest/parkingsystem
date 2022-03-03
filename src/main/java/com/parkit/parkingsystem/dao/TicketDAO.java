@@ -17,17 +17,14 @@ public class TicketDAO {
 	// Check if it's a recurring user
 	public boolean checkIfVehicleIsRegular(String plateNumber) throws Exception {
 		Connection con = dataBaseConfig.getConnection();
-
 		try {
 			PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_FOR_REGULAR_USER);
 			ps.setString(1, plateNumber);
 
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
 				return true;
 			}
-
 		} catch (Exception ex) {
 			logger.error("There was an error while checking if this vehicle is a regular one : " + ex);
 		} finally {
@@ -44,7 +41,6 @@ public class TicketDAO {
 			PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
 
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-
 			ps.setInt(1, ticket.getParkingSpot().getId());
 			ps.setString(2, ticket.getVehicleRegNumber());
 			ps.setDouble(3, ticket.getPrice());
@@ -69,6 +65,7 @@ public class TicketDAO {
 
 		try {
 			PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			ps.setString(1, vehicleRegNumber);
 			ResultSet rs = ps.executeQuery();

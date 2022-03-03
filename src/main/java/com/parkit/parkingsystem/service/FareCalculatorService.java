@@ -16,8 +16,8 @@ public class FareCalculatorService {
 			// 2 - We calculate the elapsed time between In and Out Time
 			double duration = (outHour - inHour);
 
-			// 3 - We convert milliseconds to hours, and round to 3 decimals places
-			duration = (((duration / 3600000) * 1000.0) / 1000.0);
+			// 3 - We convert milliseconds to hours, and round to 2 decimals places
+			duration = (((duration / 3600000) * 100) / 100);
 
 			// 4.1 - We check if duration is over 30 minutes, if it's not parking is free
 			// 4.2 - We calculate ticket price depending on Vehicle Type
