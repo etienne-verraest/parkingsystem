@@ -66,22 +66,6 @@ public class ParkingServiceTest {
 		}
 
 		@Test
-		@Disabled
-		@DisplayName("Regular user incoming")
-		void processIncomingVehicle_andUserIsRegular() throws Exception {
-
-			// Arrange
-			when(inputReaderUtilMock.readSelection()).thenReturn(1);
-			when(ticketDAOMock.checkIfVehicleIsRegular("XYZIJ")).thenReturn(true);
-
-			// Act
-			parkingService.processIncomingVehicle();
-
-			// Assert
-			assertTrue(ticketDAOMock.checkIfVehicleIsRegular("XYZIJ"));
-		}
-
-		@Test
 		@DisplayName("Vehicle incoming when parking is full")
 		void processIncomingVehicle_WhenParkingIsFull() throws Exception {
 			// Arrange

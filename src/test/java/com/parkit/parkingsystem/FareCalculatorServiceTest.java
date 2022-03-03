@@ -12,7 +12,6 @@ import com.parkit.parkingsystem.constants.*;
 import com.parkit.parkingsystem.model.*;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
-@DisplayName("Calculate fare for cars and bikes")
 public class FareCalculatorServiceTest {
 
 	// private static final Logger logger =
