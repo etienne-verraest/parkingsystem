@@ -7,20 +7,17 @@ import java.util.Date;
 
 import org.apache.logging.log4j.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.parkit.parkingsystem.constants.*;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.*;
 
-@ExtendWith(MockitoExtension.class)
 class TicketDAOTest {
 
 	private static final String REGISTERED_PLATE = "QSDFG";
 	private static final String UNREGISTERED_PLATE = "ABCDE";
-	private static final String NEW_VEHICLE_PLATE = "NEWV";
+	private static final String NEW_VEHICLE_PLATE = "NEWVE";
 
 	private static final Logger logger = LogManager.getLogger("TicketDAOTest");
 	private static DataBasePrepareService dataBasePrepareService;
@@ -32,7 +29,7 @@ class TicketDAOTest {
 	static Connection con;
 
 	@BeforeAll
-	static void setUp_TestEnvironment() throws Exception {
+	static void setUp_testEnvironment() throws Exception {
 
 		// Set Up DataBase Test environment
 		con = databaseTestConfig.getConnection();
@@ -64,7 +61,7 @@ class TicketDAOTest {
 	}
 
 	@AfterAll
-	static void tearDown_TestEnvironment() throws Exception {
+	static void tearDown_testEnvironment() throws Exception {
 		con.close();
 	}
 
@@ -75,7 +72,7 @@ class TicketDAOTest {
 
 		@Test
 		@DisplayName("Vehicle is not a regular one")
-		void checkIfVehicleIsRegular_ReturnsFalse() throws Exception {
+		void checkIfVehicleIsRegular_shouldReturnFalse() throws Exception {
 			// ARRANGE
 			boolean expectedValue = false;
 
@@ -88,7 +85,7 @@ class TicketDAOTest {
 
 		@Test
 		@DisplayName("Vehicle is regular")
-		void checkIfVehicleIsRegular_ReturnsTrue() throws Exception {
+		void checkIfVehicleIsRegular_shouldReturnTrue() throws Exception {
 			// ARRANGE
 			boolean expectedValue = true;
 
