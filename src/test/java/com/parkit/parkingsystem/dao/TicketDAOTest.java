@@ -62,6 +62,11 @@ class TicketDAOTest {
 
 	@AfterAll
 	static void tearDown_testEnvironment() throws Exception {
+		// Clearing tested entries
+		dataBasePrepareService = new DataBasePrepareService();
+		dataBasePrepareService.clearDataBaseEntries();
+
+		// Closing connection
 		con.close();
 	}
 

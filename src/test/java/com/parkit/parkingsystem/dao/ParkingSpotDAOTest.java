@@ -42,6 +42,11 @@ class ParkingSpotDAOTest {
 
 	@AfterAll
 	static void tearDown_testEnvironment() throws Exception {
+		// Clearing previous tested entries
+		dataBasePrepareService = new DataBasePrepareService();
+		dataBasePrepareService.clearDataBaseEntries();
+
+		// Closing connection
 		con.close();
 	}
 
