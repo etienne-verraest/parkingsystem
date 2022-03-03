@@ -14,7 +14,7 @@ public class TicketDAO {
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-	// Check if it's a recurring user
+	// Check if it's a recurring user (count entries in database)
 	public boolean checkIfVehicleIsRegular(String plateNumber) throws Exception {
 		Connection con = dataBaseConfig.getConnection();
 		try {
@@ -23,7 +23,32 @@ public class TicketDAO {
 
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				return true;
+				int count = rs.getInt("ticketcounts");
+				if (count > 0) {
+					return true;
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("There was an error while checking if this vehicle is a regular one : " + ex);
+		} finally {
+			dataBaseConfig.closeConnection(con);
+		}
+		return false;
+	}
+
+	// Check if plate is already in the parking (avoid duplicates)
+	public boolean checkIfUserIsAlreadyIn(String plateNumber) throws Exception {
+		Connection con = dataBaseConfig.getConnection();
+		try {
+			PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_FOR_PLATE_REGISTERED);
+			ps.setString(1, plateNumber);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt("plateregistered");
+				if (count > 0) {
+					return true;
+				}
 			}
 		} catch (Exception ex) {
 			logger.error("There was an error while checking if this vehicle is a regular one : " + ex);

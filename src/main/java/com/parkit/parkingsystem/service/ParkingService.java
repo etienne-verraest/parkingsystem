@@ -28,35 +28,44 @@ public class ParkingService {
 	public void processIncomingVehicle() {
 
 		try {
-			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
+			String vehicleRegNumber = getVehichleRegNumber();
 
-			if (parkingSpot != null && parkingSpot.getId() > 0) {
-				String vehicleRegNumber = getVehichleRegNumber();
+			// We check if a plate is already registered in the tickets, if it's not
+			// algorithm will continue
+			if (ticketDAO.checkIfUserIsAlreadyIn(vehicleRegNumber) == false) {
 
-				if (ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber)) {
-					System.out.println(
-							"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+				// Getting next parking spot, if not available returns an error
+				ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
+
+				if (parkingSpot != null && parkingSpot.getId() > 0) {
+
+					// If our user is a regular one, we welcome him with a personalized message
+					if (ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber)) {
+						System.out.println(
+								"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+					}
+
+					// Allot this parking space and mark it's availability as false
+					parkingSpot.setAvailable(false);
+					parkingSpotDAO.updateParking(parkingSpot);
+
+					Date inTime = new Date();
+					Ticket ticket = new Ticket();
+
+					// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+					ticket.setParkingSpot(parkingSpot);
+					ticket.setVehicleRegNumber(vehicleRegNumber);
+					ticket.setPrice(0);
+					ticket.setInTime(inTime);
+					ticket.setOutTime(null);
+					ticketDAO.saveTicket(ticket);
+
+					System.out.println("Please park your vehicle in spot number : " + parkingSpot.getId());
+					System.out.println("Recorded in-time for vehicle number : " + vehicleRegNumber + " is : " + inTime);
 				}
-
-				// Allot this parking space and mark it's availability as false
-				parkingSpot.setAvailable(false);
-				parkingSpotDAO.updateParking(parkingSpot);
-
-				Date inTime = new Date();
-				Ticket ticket = new Ticket();
-
-				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-				ticket.setParkingSpot(parkingSpot);
-				ticket.setVehicleRegNumber(vehicleRegNumber);
-				ticket.setPrice(0);
-				ticket.setInTime(inTime);
-				ticket.setOutTime(null);
-				ticketDAO.saveTicket(ticket);
-
-				System.out.println("Please park your vehicle in spot number : " + parkingSpot.getId());
-				System.out.println("Recorded in-time for vehicle number : " + vehicleRegNumber + " is : " + inTime);
+			} else {
+				System.out.println("This vehicle is already parked, did you mean vehicle exiting ?");
 			}
-
 		} catch (Exception e) {
 			logger.error("Unable to process incoming vehicle", e);
 		}

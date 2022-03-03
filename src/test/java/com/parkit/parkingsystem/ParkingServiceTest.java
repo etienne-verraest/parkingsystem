@@ -177,7 +177,6 @@ public class ParkingServiceTest {
 			verify(parkingSpotDAOMock).updateParking(parkingSpot);
 		}
 
-		// TODO : STATIC VARIABLES
 		@Test
 		@DisplayName("Vehicle exiting with bad-formatted ticket")
 		void processExitingVehicle_WithBadTicket() throws Exception {

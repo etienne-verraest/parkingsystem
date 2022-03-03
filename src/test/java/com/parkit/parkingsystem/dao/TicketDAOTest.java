@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.logging.log4j.*;
 import org.junit.jupiter.api.*;
 
+import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.*;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
@@ -22,7 +23,7 @@ class TicketDAOTest {
 	private static final Logger logger = LogManager.getLogger("TicketDAOTest");
 	private static DataBasePrepareService dataBasePrepareService;
 
-	private static DataBaseTestConfig databaseTestConfig = new DataBaseTestConfig();
+	private static DataBaseConfig databaseTestConfig = new DataBaseTestConfig();
 
 	private static TicketDAO ticketDAO;
 
@@ -101,6 +102,28 @@ class TicketDAOTest {
 			assertEquals(expectedValue, actualValue);
 
 		}
+	}
+
+	// TODO : Implements checkIfUserIsAlreadyInTests
+	@Disabled
+	@Nested
+	@Tag("AlreadyIn")
+	@DisplayName("Check if user is already in parking")
+	class checkIfUserIsAlreadyInTests {
+
+		@Test
+		@DisplayName("Vehicle is already in")
+		void checkIfVehicleIsAlreadyIn_shouldReturnTrue() throws Exception {
+			// ARRANGE
+			boolean expectedValue = true;
+
+			// ACT
+			boolean actualValue = ticketDAO.checkIfUserIsAlreadyIn(REGISTERED_PLATE);
+
+			// ASSERT
+			assertEquals(expectedValue, actualValue);
+		}
+
 	}
 
 	@Test
