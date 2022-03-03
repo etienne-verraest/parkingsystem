@@ -2,14 +2,11 @@ package com.parkit.parkingsystem.service;
 
 import java.util.Date;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.dao.*;
+import com.parkit.parkingsystem.model.*;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 public class ParkingService {
