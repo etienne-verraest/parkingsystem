@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,7 +26,6 @@ import com.parkit.parkingsystem.model.Ticket;
 class TicketDAOTest {
 
 	private static final String REGISTERED_PLATE = "QSDFG";
-	private static final String UNREGISTERED_PLATE = "ABCDE";
 	private static final String NEW_VEHICLE_PLATE = "NEWVE";
 
 	private static final Logger LOGGER = LogManager.getLogger(TicketDAOTest.class);
@@ -71,11 +69,6 @@ class TicketDAOTest {
 		ps.execute();
 	}
 
-	@AfterAll
-	static void tearDown_testEnvironment() throws Exception {
-		con.close();
-	}
-
 	@Nested
 	@Tag("Regular")
 	@DisplayName("Testing if a vehicle is regular")
@@ -88,7 +81,7 @@ class TicketDAOTest {
 			boolean expectedValue = false;
 
 			// ACT
-			boolean actualValue = ticketDAO.checkIfVehicleIsRegular(UNREGISTERED_PLATE);
+			boolean actualValue = ticketDAO.checkIfVehicleIsRegular("ABCDE");
 
 			// ASSERT
 			assertEquals(expectedValue, actualValue);
@@ -146,4 +139,35 @@ class TicketDAOTest {
 		assertEquals(expectedValue, actualValue);
 	}
 
+	@Nested
+	@Tag("Checks")
+	@DisplayName("Vehicle check plate when entering or exiting")
+	class checkVehicleWhenEnteringOrExiting {
+
+		@Test
+		@DisplayName("Check if vehicle has already parked out")
+		void checkAlreadyOut_shouldReturnTrue() throws Exception {
+			// ARRANGE
+			boolean expectedValue = true;
+
+			// ACT
+			boolean actualValue = ticketDAO.checkIfUserHasAlreadyParkedOut(REGISTERED_PLATE);
+
+			// ASSERT
+			assertEquals(expectedValue, actualValue);
+		}
+
+		@Test
+		@DisplayName("Check if vehicle is parked in")
+		void checkAlreadyIn_shouldReturnTrue() throws Exception {
+			// ARRANGE
+			boolean expectedValue = true;
+
+			// ACT
+			boolean actualValue = ticketDAO.checkIfUserIsAlreadyIn(NEW_VEHICLE_PLATE);
+
+			// ASSERT
+			assertEquals(expectedValue, actualValue);
+		}
+	}
 }
