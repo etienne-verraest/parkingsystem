@@ -4,9 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
 
-import org.apache.logging.log4j.*;
-import org.junit.jupiter.api.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
+import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
@@ -14,11 +19,11 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 
 class ParkingSpotDAOTest {
 
-	private static final Logger logger = LogManager.getLogger("ParkingSpotDAOTest");
+	private static final Logger LOGGER = LogManager.getLogger(ParkingSpotDAOTest.class);
 
 	private static DataBasePrepareService dataBasePrepareService;
 
-	private static DataBaseTestConfig databaseTestConfig = new DataBaseTestConfig();
+	private static DataBaseConfig databaseTestConfig = new DataBaseTestConfig();
 
 	private static ParkingSpotDAO parkingSpotDAO;
 
@@ -29,7 +34,7 @@ class ParkingSpotDAOTest {
 
 		// Set Up DataBase Test environment
 		con = databaseTestConfig.getConnection();
-		logger.info("Test environment database has been set up");
+		LOGGER.info("Test environment database has been set up");
 
 		// Initialize our DAO with test environment
 		parkingSpotDAO = new ParkingSpotDAO();

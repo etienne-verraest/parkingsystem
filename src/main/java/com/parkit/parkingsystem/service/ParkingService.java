@@ -2,16 +2,19 @@ package com.parkit.parkingsystem.service;
 
 import java.util.Date;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.*;
-import com.parkit.parkingsystem.model.*;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 public class ParkingService {
 
-	private static final Logger logger = LogManager.getLogger("ParkingService");
+	private static final Logger LOGGER = LogManager.getLogger(ParkingService.class);
 
 	private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
@@ -67,7 +70,7 @@ public class ParkingService {
 				System.out.println("This vehicle is already parked, did you mean vehicle exiting ?");
 			}
 		} catch (Exception e) {
-			logger.error("Unable to process incoming vehicle", e);
+			LOGGER.error("Unable to process incoming vehicle", e);
 		}
 	}
 
@@ -91,9 +94,9 @@ public class ParkingService {
 			}
 
 		} catch (IllegalArgumentException ie) {
-			logger.error("Error parsing user input for type of vehicle", ie);
+			LOGGER.error("Error parsing user input for type of vehicle", ie);
 		} catch (Exception e) {
-			logger.error("Error fetching next available parking slot", e);
+			LOGGER.error("Error fetching next available parking slot", e);
 		}
 
 		return parkingSpot;
@@ -152,7 +155,7 @@ public class ParkingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("Unable to process exiting vehicle", e);
+			LOGGER.error("Unable to process exiting vehicle", e);
 		}
 
 	}

@@ -2,17 +2,27 @@ package com.parkit.parkingsystem.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.Date;
 
-import org.apache.logging.log4j.*;
-import org.junit.jupiter.api.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
-import com.parkit.parkingsystem.constants.*;
+import com.parkit.parkingsystem.constants.DBConstants;
+import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
-import com.parkit.parkingsystem.model.*;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 
 class TicketDAOTest {
 
@@ -20,7 +30,7 @@ class TicketDAOTest {
 	private static final String UNREGISTERED_PLATE = "ABCDE";
 	private static final String NEW_VEHICLE_PLATE = "NEWVE";
 
-	private static final Logger logger = LogManager.getLogger("TicketDAOTest");
+	private static final Logger LOGGER = LogManager.getLogger(TicketDAOTest.class);
 	private static DataBasePrepareService dataBasePrepareService;
 
 	private static DataBaseConfig databaseTestConfig = new DataBaseTestConfig();
@@ -34,7 +44,7 @@ class TicketDAOTest {
 
 		// Set Up DataBase Test environment
 		con = databaseTestConfig.getConnection();
-		logger.info("Test environment database has been set up");
+		LOGGER.info("Test environment database has been set up");
 
 		// Initialize our DAO with test environment
 		ticketDAO = new TicketDAO();
@@ -59,6 +69,7 @@ class TicketDAOTest {
 		ps.setTimestamp(4, timestampIn);
 		ps.setTimestamp(5, timestampOut);
 		ps.execute();
+		ps.close();
 	}
 
 	@AfterAll
@@ -104,8 +115,6 @@ class TicketDAOTest {
 		}
 	}
 
-	// TODO : Implements checkIfUserIsAlreadyInTests
-	@Disabled
 	@Nested
 	@Tag("AlreadyIn")
 	@DisplayName("Check if user is already in parking")
@@ -118,7 +127,7 @@ class TicketDAOTest {
 			boolean expectedValue = true;
 
 			// ACT
-			boolean actualValue = ticketDAO.checkIfUserIsAlreadyIn(REGISTERED_PLATE);
+			boolean actualValue = ticketDAO.checkIfUserIsAlreadyIn(NEW_VEHICLE_PLATE);
 
 			// ASSERT
 			assertEquals(expectedValue, actualValue);

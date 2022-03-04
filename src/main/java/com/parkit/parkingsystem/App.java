@@ -6,10 +6,11 @@ import org.apache.logging.log4j.Logger;
 import com.parkit.parkingsystem.service.InteractiveShell;
 
 public class App {
-	private static final Logger logger = LogManager.getLogger("App");
+
+	private static final Logger LOGGER = LogManager.getLogger(App.class);
 
 	public static void main(String args[]) {
-		logger.info("Initializing Parking System");
+		LOGGER.info("Initializing Parking System");
 		InteractiveShell.loadInterface();
 	}
 }
