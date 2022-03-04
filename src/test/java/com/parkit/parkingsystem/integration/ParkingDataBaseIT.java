@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,11 +55,6 @@ public class ParkingDataBaseIT {
 	private void setUpPerTest() throws Exception {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(VEHICLE_PLATE_INTEGRATION);
-		dataBasePrepareService.clearDataBaseEntries();
-	}
-
-	@AfterAll
-	private static void tearDown() {
 		dataBasePrepareService.clearDataBaseEntries();
 	}
 

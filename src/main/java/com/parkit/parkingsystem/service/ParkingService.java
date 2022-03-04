@@ -126,34 +126,38 @@ public class ParkingService {
 		try {
 
 			String vehicleRegNumber = getVehichleRegNumber();
-			boolean isRegular = ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber);
+			if (ticketDAO.checkIfUserHasAlreadyParkedOut(vehicleRegNumber) == false) {
 
-			Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-			ticket.setOutTime(new Date());
+				boolean isRegular = ticketDAO.checkIfVehicleIsRegular(vehicleRegNumber);
 
-			fareCalculatorService.calculateFare(ticket, isRegular);
+				Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+				ticket.setOutTime(new Date());
 
-			if (ticketDAO.updateTicket(ticket)) {
+				fareCalculatorService.calculateFare(ticket, isRegular);
 
-				// Set used parking spot to available
-				ParkingSpot parkingSpot = ticket.getParkingSpot();
-				parkingSpot.setAvailable(true);
-				parkingSpotDAO.updateParking(parkingSpot);
+				if (ticketDAO.updateTicket(ticket)) {
 
-				double ticketPrice = ticket.getPrice();
-				if (ticketPrice > 0) {
-					System.out.println("Please pay the parking fare : " + ticketPrice);
+					// Set used parking spot to available
+					ParkingSpot parkingSpot = ticket.getParkingSpot();
+					parkingSpot.setAvailable(true);
+					parkingSpotDAO.updateParking(parkingSpot);
+
+					double ticketPrice = ticket.getPrice();
+					if (ticketPrice > 0) {
+						System.out.println("Please pay the parking fare : " + ticketPrice);
+					} else {
+						System.out.println("Parking is free for the first 30 minutes, no payment needed");
+					}
+
+					System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber()
+							+ " is : " + ticket.getOutTime());
+
 				} else {
-					System.out.println("Parking is free for the first 30 minutes, no payment needed");
+					System.out.println("Unable to update ticket information. Error occurred");
 				}
-
-				System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is : "
-						+ ticket.getOutTime());
-
 			} else {
-				System.out.println("Unable to update ticket information. Error occurred");
+				System.out.println("Vehicle is already out, did you want to enter your vehicle instead ?");
 			}
-
 		} catch (Exception e) {
 			LOGGER.error("Unable to process exiting vehicle", e);
 		}

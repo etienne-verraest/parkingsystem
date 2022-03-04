@@ -58,13 +58,42 @@ public class TicketDAO {
 
 		try {
 			con = dataBaseConfig.getConnection();
-			ps = con.prepareStatement(DBConstants.CHECK_FOR_PLATE_REGISTERED);
+			ps = con.prepareStatement(DBConstants.CHECK_IS_ALREADY_IN);
 			ps.setString(1, plateNumber);
 
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				int count = rs.getInt("plateregistered");
+				int count = rs.getInt("vehicleAlreadyIn");
 				if (count > 0) {
+					return true;
+				}
+			}
+		} catch (Exception ex) {
+			LOGGER.error("There was an error while checking if this vehicle is a regular one : " + ex);
+		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
+			dataBaseConfig.closeConnection(con);
+		}
+		return false;
+	}
+
+	// Check if plate is already in the parking (avoid duplicates)
+	public boolean checkIfUserHasAlreadyParkedOut(String plateNumber) throws Exception {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = dataBaseConfig.getConnection();
+			ps = con.prepareStatement(DBConstants.CHECK_IS_ALREADY_OUT);
+			ps.setString(1, plateNumber);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt("vehicleAlreadyOut");
+				if (count == 0) {
 					return true;
 				}
 			}
