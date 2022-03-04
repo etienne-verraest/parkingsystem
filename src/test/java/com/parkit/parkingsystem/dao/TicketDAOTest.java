@@ -69,16 +69,10 @@ class TicketDAOTest {
 		ps.setTimestamp(4, timestampIn);
 		ps.setTimestamp(5, timestampOut);
 		ps.execute();
-		ps.close();
 	}
 
 	@AfterAll
 	static void tearDown_testEnvironment() throws Exception {
-		// Clearing tested entries
-		dataBasePrepareService = new DataBasePrepareService();
-		dataBasePrepareService.clearDataBaseEntries();
-
-		// Closing connection
 		con.close();
 	}
 
@@ -115,26 +109,6 @@ class TicketDAOTest {
 		}
 	}
 
-	@Nested
-	@Tag("AlreadyIn")
-	@DisplayName("Check if user is already in parking")
-	class checkIfUserIsAlreadyInTests {
-
-		@Test
-		@DisplayName("Vehicle is already in")
-		void checkIfVehicleIsAlreadyIn_shouldReturnTrue() throws Exception {
-			// ARRANGE
-			boolean expectedValue = true;
-
-			// ACT
-			boolean actualValue = ticketDAO.checkIfUserIsAlreadyIn(NEW_VEHICLE_PLATE);
-
-			// ASSERT
-			assertEquals(expectedValue, actualValue);
-		}
-
-	}
-
 	@Test
 	@DisplayName("Ticket is saved in database and returns VEHICLE_REG_NUMBER")
 	void saveTicket_shouldReturnTrue() throws Exception {
@@ -155,7 +129,6 @@ class TicketDAOTest {
 
 		// ASSERT
 		assertEquals(NEW_VEHICLE_PLATE, actualPlate);
-
 	}
 
 	@Test
