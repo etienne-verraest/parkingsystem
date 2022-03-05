@@ -31,7 +31,6 @@ public class TicketDAO {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.CHECK_FOR_REGULAR_USER);
 			ps.setString(1, plateNumber);
-
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				int count = rs.getInt("ticketcounts");
@@ -181,7 +180,6 @@ public class TicketDAO {
 			ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
 			ps.setDouble(1, ticket.getPrice());
 			ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
-			System.out.println(ticket.getId());
 			ps.setInt(3, ticket.getId());
 			ps.execute();
 			return true;
