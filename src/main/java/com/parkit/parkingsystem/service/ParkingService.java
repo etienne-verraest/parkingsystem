@@ -67,7 +67,7 @@ public class ParkingService {
 					System.out.println("Recorded in-time for vehicle number : " + vehicleRegNumber + " is : " + inTime);
 				}
 			} else {
-				System.out.println("This vehicle is already parked, did you mean vehicle exiting ?");
+				System.out.println("This vehicle is already parked, did you want to exit vehicle instead ?");
 			}
 		} catch (Exception e) {
 			LOGGER.error("Unable to process incoming vehicle", e);
@@ -156,7 +156,7 @@ public class ParkingService {
 					System.out.println("Unable to update ticket information. Error occurred");
 				}
 			} else {
-				System.out.println("Vehicle is already out, did you want to enter your vehicle instead ?");
+				System.out.println("This vehicle has not been found in our parking");
 			}
 		} catch (Exception e) {
 			LOGGER.error("Unable to process exiting vehicle", e);
