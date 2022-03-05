@@ -11,8 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
@@ -42,14 +40,13 @@ public class FareCalculatorServiceTest {
 	@DisplayName("Fare Calculator for Cars")
 	class FareCaculatorForCars {
 
-		@DisplayName("Calculate fare with less than one hour of parking time.")
-		@ParameterizedTest(name = "{0} minutes should cost {1} €")
-		@CsvSource({ "45,1.125", "58,1.45" })
-		void calculateFareCar_WithLessThanOneHourParkingTime(double minutes, double expectedPrice) {
+		@Test
+		@DisplayName("Calculate fare with less than one hour of parking time (45 mins)")
+		void calculateFareCar_WithLessThanOneHourParkingTime() {
 
 			// ARRANGE
 			Date inTime = new Date();
-			inTime.setTime((long) (System.currentTimeMillis() - (minutes * 60 * 1000)));
+			inTime.setTime((long) (System.currentTimeMillis() - (45 * 60 * 1000)));
 
 			Date outTime = new Date();
 			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -62,10 +59,10 @@ public class FareCalculatorServiceTest {
 			fareCalculatorService.calculateFare(ticket, false);
 
 			// ASSERT
-			assertEquals(((minutes / 60) * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+			assertEquals(0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 		}
 
-		@DisplayName("Calculate fare with more than a day of parking time.")
+		@DisplayName("Calculate fare with more than a day of parking time (2 days)")
 		@Test
 		void calculateFareCar_WithMoreThanADayParkingTime() {
 			// ARRANGE
@@ -113,7 +110,7 @@ public class FareCalculatorServiceTest {
 		}
 
 		@Test
-		@DisplayName("Calculate fare with less than one hour of parking time.")
+		@DisplayName("Calculate fare with less than one hour of parking time (45 mins)")
 		void calculateFareBike_WithLessThanOneHourParkingTime() {
 			// ARRANGE
 			Date inTime = new Date();
@@ -140,7 +137,7 @@ public class FareCalculatorServiceTest {
 	class calculateFare_WithDiscount {
 
 		@Test
-		@DisplayName("Fare should be free if parking is less than 30 minutes")
+		@DisplayName("Fare should be free if parking is less than 30 minutes (20 minutes)")
 		void calculateFare_WithLessThan30Minutes() {
 			// ARRANGE
 			Date inTime = new Date();
@@ -162,7 +159,7 @@ public class FareCalculatorServiceTest {
 		}
 
 		@Test
-		@DisplayName("User has a 5% discount coupon if it's a regular user")
+		@DisplayName("User has a 5% discount coupon if it's a regular user (45 mins)")
 		void calculateFare_With5PercentDiscount() {
 			// ARRANGE
 			Date inTime = new Date();
@@ -186,7 +183,7 @@ public class FareCalculatorServiceTest {
 	}
 
 	@Test
-	@DisplayName("Vehicle Type is unknown")
+	@DisplayName("Vehicle Type unknown returns IllegalArgumentException")
 	void calculateFare_UnkownType() {
 		// ARRANGE
 		Date inTime = new Date();

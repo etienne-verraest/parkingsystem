@@ -17,7 +17,8 @@ public class FareCalculatorService {
 			double duration = (outHour - inHour);
 
 			// 3 - We convert milliseconds to hours, and round to 2 decimals places
-			duration = (((duration / 3600000) * 100) / 100);
+			duration = duration / 3600000;
+			duration = Math.round(duration * 100.0) / 100.0;
 
 			// 4.1 - We check if duration is over 30 minutes, if it's not parking is free
 			// 4.2 - We calculate ticket price depending on Vehicle Type
