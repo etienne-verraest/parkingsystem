@@ -1,6 +1,8 @@
 package com.parkit.parkingsystem.service;
 
-import com.parkit.parkingsystem.constants.Fare;
+import static com.parkit.parkingsystem.constants.Fare.BIKE_RATE_PER_HOUR;
+import static com.parkit.parkingsystem.constants.Fare.CAR_RATE_PER_HOUR;
+
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
@@ -26,21 +28,20 @@ public class FareCalculatorService {
 
 				switch (ticket.getParkingSpot().getParkingType()) {
 				case CAR: {
-					ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+					ticket.setPrice(duration * CAR_RATE_PER_HOUR);
 					break;
 				}
 				case BIKE: {
-					ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+					ticket.setPrice(duration * BIKE_RATE_PER_HOUR);
 					break;
 				}
 				default:
 					throw new IllegalArgumentException("Unkown Parking Type");
 				}
 
-				// If it is a regular user, let's apply a 5% discount
+				// If it is a regular user, we apply a 5% discount
 				if (isRegularUser) {
-					double priceDiscount = ticket.getPrice();
-					priceDiscount = priceDiscount - (priceDiscount * 0.05);
+					double priceDiscount = calculatePriceWithDiscount(ticket.getPrice());
 					ticket.setPrice(priceDiscount);
 					System.out.println("5% discount has been applied to ticket price");
 				}
@@ -51,5 +52,12 @@ public class FareCalculatorService {
 		} else {
 			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
 		}
+	}
+
+	// Calculates a 5% discount
+	public double calculatePriceWithDiscount(double price) {
+		price = price - (price * 0.05);
+		price = Math.round(price * 10.0) / 10.0;
+		return price;
 	}
 }

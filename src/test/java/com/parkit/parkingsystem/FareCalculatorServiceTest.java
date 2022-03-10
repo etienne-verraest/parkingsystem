@@ -172,13 +172,16 @@ public class FareCalculatorServiceTest {
 			ticket.setOutTime(outTime);
 			ticket.setParkingSpot(parkingSpot);
 
+			// Calculate discount price before calling our service
+			double price = 0.75 * Fare.CAR_RATE_PER_HOUR;
+			price = price - (price * 0.05);
+			price = Math.round(price * 10.0) / 10.0;
+
 			// ACT
 			fareCalculatorService.calculateFare(ticket, true);
-			double priceDiscount = 0.75 * Fare.CAR_RATE_PER_HOUR;
-			priceDiscount = priceDiscount - (priceDiscount * 0.05);
 
 			// ASSERT
-			assertEquals(priceDiscount, ticket.getPrice());
+			assertEquals(price, ticket.getPrice());
 		}
 	}
 
