@@ -10,13 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.constants.DBConstants;
+import com.parkit.parkingsystem.util.ApplicationProperties;
 
 public class DataBaseConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataBaseConfig.class);
 
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
-		return DriverManager.getConnection(DBConstants.MYSQL_URL, DBConstants.MYSQL_USER, DBConstants.MYSQL_PASSWORD);
+		return DriverManager.getConnection(DBConstants.MYSQL_URL, ApplicationProperties.INSTANCE.getDatabaseUsername(),
+				ApplicationProperties.INSTANCE.getDatabasePassword());
 	}
 
 	// Order of closing : Result set (1) , Prepared Statement (2), Connection (3)
