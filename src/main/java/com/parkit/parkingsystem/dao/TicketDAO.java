@@ -20,7 +20,13 @@ public class TicketDAO {
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-	// Check if it's a recurring user (count entries in database)
+	/**
+	 * This method checks if it's a recurring user
+	 * 
+	 * @param plateNumber is a String of a vehicle number registration
+	 * @return boolean (if true our user is regular)
+	 * 
+	 */
 	public boolean checkIfVehicleIsRegular(String plateNumber) throws Exception {
 
 		Connection con = null;
@@ -48,7 +54,14 @@ public class TicketDAO {
 		return false;
 	}
 
-	// Check if plate is already in the parking (avoid duplicates)
+	/**
+	 * This method checks if plate is already in the parking (in order to avoid
+	 * duplicates plates)
+	 * 
+	 * @param plateNumber is a String of a vehicle number registration
+	 * @return boolean (if true our user is already in the parking)
+	 *
+	 */
 	public boolean checkIfUserIsAlreadyIn(String plateNumber) throws Exception {
 
 		Connection con = null;
@@ -77,7 +90,13 @@ public class TicketDAO {
 		return false;
 	}
 
-	// Check if plate is already in the parking (avoid duplicates)
+	/**
+	 * This method checks if a user has already parked out
+	 * 
+	 * @param plateNumber is a String of a vehicle number registration
+	 * @return boolean (if true our user has already parked out)
+	 * 
+	 */
 	public boolean checkIfUserHasAlreadyParkedOut(String plateNumber) throws Exception {
 
 		Connection con = null;
@@ -106,7 +125,13 @@ public class TicketDAO {
 		return false;
 	}
 
-	// Save ticket to database
+	/**
+	 * This method saves a ticket to database
+	 * 
+	 * @param ticket is an object of type Ticket
+	 * @return boolean (if true our ticket is correctly saved)
+	 * 
+	 */
 	public boolean saveTicket(Ticket ticket) throws Exception {
 
 		Connection con = null;
@@ -133,7 +158,13 @@ public class TicketDAO {
 		return false;
 	}
 
-	// Get ticket from database
+	/**
+	 * This method gets a ticket from database
+	 * 
+	 * @param vehicleRegNumber is a String of a vehicle number registration
+	 * @return an object of type Ticket
+	 *
+	 */
 	public Ticket getTicket(String vehicleRegNumber) throws Exception {
 
 		Connection con = null;
@@ -169,7 +200,13 @@ public class TicketDAO {
 		return ticket;
 	}
 
-	// Update ticket in database
+	/**
+	 * This method updates a ticket in database
+	 * 
+	 * @param ticket an object of type Ticket
+	 * @return boolean (if true our ticket has been correctly updated)
+	 *
+	 */
 	public boolean updateTicket(Ticket ticket) throws Exception {
 
 		Connection con = null;

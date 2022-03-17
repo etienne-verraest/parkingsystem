@@ -5,8 +5,21 @@ import static com.parkit.parkingsystem.constants.Fare.CAR_RATE_PER_HOUR;
 
 import com.parkit.parkingsystem.model.Ticket;
 
+/**
+ * 
+ * This service calculates the price of a given ticket. It also checks for
+ * regular users and gives them a 5% discount on ticket price
+ *
+ */
 public class FareCalculatorService {
 
+	/**
+	 * This method calculates the price of the ticket
+	 * 
+	 * @param ticket        is an object of type Ticket
+	 * @param isRegularUser if set to true, the user is a regular and will benefit a
+	 *                      5% discount
+	 */
 	public void calculateFare(Ticket ticket, boolean isRegularUser) {
 
 		if ((ticket.getOutTime() != null) || (ticket.getOutTime().after(ticket.getInTime()))) {
@@ -54,8 +67,13 @@ public class FareCalculatorService {
 		}
 	}
 
-	// Calculates a 5% discount
-	public double calculatePriceWithDiscount(double price) {
+	/**
+	 * This method calculates a 5% discount
+	 * 
+	 * @param price base price used for calculation
+	 * @return a double of discounted price
+	 */
+	private double calculatePriceWithDiscount(double price) {
 		price = price - (price * 0.05);
 		price = Math.round(price * 10.0) / 10.0;
 		return price;

@@ -12,6 +12,12 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+/**
+ * 
+ * This class handles the logic of the parking. It process entering and exiting
+ * vehicles
+ *
+ */
 public class ParkingService {
 
 	private static final Logger LOGGER = LogManager.getLogger(ParkingService.class);
@@ -28,6 +34,9 @@ public class ParkingService {
 		this.ticketDAO = ticketDAO;
 	}
 
+	/**
+	 * This method register an incoming vehicle
+	 */
 	public void processIncomingVehicle() {
 
 		try {
@@ -74,11 +83,22 @@ public class ParkingService {
 		}
 	}
 
+	/**
+	 * This method returns a vehicle registration number
+	 * 
+	 * @return String of a vehicle registration number
+	 * 
+	 */
 	public String getVehichleRegNumber() throws Exception {
 		System.out.println("Please type the vehicle registration number and press enter key");
 		return inputReaderUtil.readVehicleRegistrationNumber();
 	}
 
+	/**
+	 * This method checks if there is an available parking spot
+	 * 
+	 * @return a parking spot
+	 */
 	public ParkingSpot getNextParkingNumberIfAvailable() {
 		int parkingNumber = 0;
 		ParkingSpot parkingSpot = null;
@@ -102,6 +122,11 @@ public class ParkingService {
 		return parkingSpot;
 	}
 
+	/**
+	 * This method returns a vehicle type, based on user's input
+	 * 
+	 * @return Vehicle Type (Car, Bike)
+	 */
 	public ParkingType getVehichleType() {
 		System.out.println("Please select vehicle type from menu");
 		System.out.println("1 CAR");
@@ -121,6 +146,9 @@ public class ParkingService {
 		}
 	}
 
+	/**
+	 * This method process an exiting vehicle
+	 */
 	public void processExitingVehicle() {
 
 		try {
@@ -143,6 +171,7 @@ public class ParkingService {
 					parkingSpotDAO.updateParking(parkingSpot);
 
 					double ticketPrice = ticket.getPrice();
+					// If price equals 0, the parking is free and no payment is needed
 					if (ticketPrice > 0) {
 						System.out.println("Please pay the parking fare : " + ticketPrice);
 					} else {

@@ -12,6 +12,11 @@ import org.apache.logging.log4j.Logger;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.util.ApplicationProperties;
 
+/**
+ * 
+ * This class handles all the database functionalities
+ *
+ */
 public class DataBaseConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataBaseConfig.class);
@@ -21,8 +26,11 @@ public class DataBaseConfig {
 				ApplicationProperties.INSTANCE.getDatabasePassword());
 	}
 
-	// Order of closing : Result set (1) , Prepared Statement (2), Connection (3)
-	// Close connection
+	/**
+	 * Close a SQL connection
+	 * 
+	 * @param con is an object of type Connection
+	 */
 	public void closeConnection(Connection con) {
 		if (con != null) {
 			try {
@@ -33,7 +41,11 @@ public class DataBaseConfig {
 		}
 	}
 
-	// Close statement
+	/**
+	 * Close a SQL prepared statement
+	 * 
+	 * @param ps is an object of type PreparedStatement
+	 */
 	public void closePreparedStatement(PreparedStatement ps) {
 		if (ps != null) {
 			try {
@@ -44,7 +56,11 @@ public class DataBaseConfig {
 		}
 	}
 
-	// Close result-set
+	/**
+	 * Close a SQL result set
+	 * 
+	 * @param rs is an object of type ResultSet
+	 */
 	public void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {

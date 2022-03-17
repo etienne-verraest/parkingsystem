@@ -7,10 +7,19 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+/**
+ * 
+ * This class is used as our console menu and is used to process different
+ * inputs
+ *
+ */
 public class InteractiveShell {
 
 	private static final Logger LOGGER = LogManager.getLogger(InteractiveShell.class);
 
+	/**
+	 * This method loads every utilities classes and waits for user's input
+	 */
 	public static void loadInterface() {
 
 		LOGGER.info("Parking system have been initialized");
@@ -45,6 +54,9 @@ public class InteractiveShell {
 		}
 	}
 
+	/**
+	 * This method loads our GUI
+	 */
 	private static void loadMenu() {
 		System.out.println("Please select an option : simply enter the number to choose an action");
 		System.out.println("1 - New Vehicle Entering - Allocate Parking Space");
