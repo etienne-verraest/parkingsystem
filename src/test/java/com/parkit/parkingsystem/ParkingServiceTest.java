@@ -1,5 +1,27 @@
 package com.parkit.parkingsystem;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -7,55 +29,183 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Date;
-
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingServiceTest {
 
-    private static ParkingService parkingService;
+	@InjectMocks
+	ParkingService parkingService;
 
-    @Mock
-    private static InputReaderUtil inputReaderUtil;
-    @Mock
-    private static ParkingSpotDAO parkingSpotDAO;
-    @Mock
-    private static TicketDAO ticketDAO;
+	@Mock
+	InputReaderUtil inputReaderUtilMock;
 
-    @BeforeEach
-    private void setUpPerTest() {
-        try {
-            when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+	@Mock
+	ParkingSpotDAO parkingSpotDAOMock;
 
-            ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
-            Ticket ticket = new Ticket();
-            ticket.setInTime(new Date(System.currentTimeMillis() - (60*60*1000)));
-            ticket.setParkingSpot(parkingSpot);
-            ticket.setVehicleRegNumber("ABCDEF");
-            when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-            when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+	@Mock
+	TicketDAO ticketDAOMock;
 
-            when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
+	Ticket ticket;
 
-            parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw  new RuntimeException("Failed to set up test mock objects");
-        }
-    }
+	@BeforeEach
+	void setup() {
+		ticket = new Ticket();
+		ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
+		ticket.setOutTime(new Date(System.currentTimeMillis()));
+		ticket.setVehicleRegNumber("ABCDEF");
+		ticket.setId(1);
+	}
 
-    @Test
-    public void processExitingVehicleTest(){
-        parkingService.processExitingVehicle();
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
-    }
+	@Nested
+	@Tag("Incoming")
+	@DisplayName("Incoming Vehicles")
+	class processIncomingVehicleTests {
 
+		@Test
+		@DisplayName("Vehicle incoming with available parking spot")
+		void processIncomingVehicle_WithParkingSpotAvailable() throws Exception {
+
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1);
+			when(parkingSpotDAOMock.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+			when(ticketDAOMock.saveTicket(any(Ticket.class))).thenReturn(true);
+
+			// Act
+			parkingService.processIncomingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock, times(1)).updateParking(any(ParkingSpot.class));
+			verify(ticketDAOMock, times(1)).saveTicket(any(Ticket.class));
+		}
+
+		@Test
+		@DisplayName("Vehicle incoming when parking is full")
+		void processIncomingVehicle_WhenParkingIsFull() throws Exception {
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1);
+			when(parkingSpotDAOMock.getNextAvailableSlot(any(ParkingType.class))).thenReturn(0);
+
+			// Act
+			parkingService.processIncomingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock, never()).updateParking(any(ParkingSpot.class));
+
+		}
+	}
+
+	@Nested
+	@Tag("Next")
+	@DisplayName("Checking for next parking slot")
+	class getNextParkingNumberIfAvailableTests {
+
+		@Test
+		@DisplayName("A parking spot is available")
+		void getNextParking_WithAvailableSpot() throws Exception {
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1);
+			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(20);
+			ParkingSpot expectedParkingSpot = new ParkingSpot(20, ParkingType.CAR, true);
+
+			// Act
+			ParkingSpot actualParkingSpot = parkingService.getNextParkingNumberIfAvailable();
+
+			// Assert
+			assertEquals(expectedParkingSpot, actualParkingSpot);
+
+		}
+
+		@Test
+		@DisplayName("No parking spot is available")
+		void getNextParking_ButParkingIsFull() throws Exception {
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1);
+			when(parkingSpotDAOMock.getNextAvailableSlot(ParkingType.CAR)).thenReturn(0);
+
+			// Act
+			ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+
+			// Assert
+			verify(parkingSpotDAOMock, times(1)).getNextAvailableSlot(ParkingType.CAR);
+			assertNull(parkingSpot);
+		}
+	}
+
+	@Nested
+	@Tag("Type")
+	@DisplayName("VehicleType related tests")
+	class getVehicleTypeTests {
+
+		@Test
+		@DisplayName("VehicleType is a car or a bike")
+		void getVehicleType_HandleCars_AndBikes() {
+
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(1).thenReturn(2);
+			ParkingType expectedFirstParkingType = ParkingType.CAR;
+			ParkingType expectedSecondParkingType = ParkingType.BIKE;
+
+			// Act
+			ParkingType actualFirstParkingType = parkingService.getVehichleType();
+			ParkingType actualSecondParkingType = parkingService.getVehichleType();
+
+			// Assert
+			assertAll(() -> assertEquals(expectedFirstParkingType, actualFirstParkingType),
+					() -> assertEquals(expectedSecondParkingType, actualSecondParkingType));
+
+		}
+
+		@Test
+		@DisplayName("VehicleType returns IllegalArgumentException")
+		void getVehicleType_ButIllegalArgumentExceptionIsThrown() {
+
+			// Arrange
+			when(inputReaderUtilMock.readSelection()).thenReturn(3);
+
+			// Assert
+			assertThrows(IllegalArgumentException.class, () -> parkingService.getVehichleType());
+		}
+	}
+
+	@Nested
+	@Tag("Exit")
+	@DisplayName("Exiting Vehicles")
+	class processExitingVehicleTests {
+
+		@Test
+		@DisplayName("Vehicle exiting with well-formatted ticket")
+		void processExitingVehicle_WithGoodTicket() throws Exception {
+
+			// Arrange
+			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+			ticket.setParkingSpot(parkingSpot);
+			when(inputReaderUtilMock.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+			when(ticketDAOMock.getTicket("ABCDEF")).thenReturn(ticket);
+			when(ticketDAOMock.updateTicket(ticket)).thenReturn(true);
+
+			// Act
+			parkingService.processExitingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock).updateParking(parkingSpot);
+		}
+
+		@Test
+		@DisplayName("Vehicle exiting with bad-formatted ticket")
+		void processExitingVehicle_WithBadTicket() throws Exception {
+
+			// Arrange
+			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+			ticket.setParkingSpot(parkingSpot);
+			when(inputReaderUtilMock.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+			when(ticketDAOMock.getTicket("ABCDEF")).thenReturn(ticket);
+			when(ticketDAOMock.updateTicket(ticket)).thenReturn(false);
+
+			// Act
+			parkingService.processExitingVehicle();
+
+			// Assert
+			verify(parkingSpotDAOMock, never()).updateParking(parkingSpot);
+		}
+	}
 }
